@@ -64,7 +64,7 @@ colorscheme one
 """"""""""""""""""
 let g:javascript_plugin_flow = 1
 let g:javascript_plugin_jsdoc = 1
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|vendor|coverage'
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|vendor\'
 let g:ctrlp_working_path_mode = 'w'
 let g:SuperTabCrMapping = 1
 
