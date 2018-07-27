@@ -4,7 +4,7 @@ require 'english'
 
 # Copy config files into this directory
 [
-  '.config/nvim/ini.vim',
+  '.config/nvim/init.vim',
   '.zshrc'
 ].each do |file|
   begin
@@ -16,9 +16,10 @@ end
 
 # Update GIT repo
 Dir.chdir(__dir__)
-puts `git add . && \
+puts `git pull &&
+      git add . && \
       git commit -m 'back up config files' && \
-      git status`
+      git push`
 if $CHILD_STATUS.exitstatus.zero?
   puts "\nSuccess"
 else
