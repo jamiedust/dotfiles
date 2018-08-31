@@ -22,6 +22,7 @@ Plug 'sjl/vitality.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'rakr/vim-one'
 Plug 'mileszs/ack.vim'
+Plug 'nathanaelkane/vim-indent-guides'
 call plug#end()
 
 """""""""""""""
@@ -47,15 +48,14 @@ set number
 set relativenumber
 set splitright
 set splitbelow
+set cursorline
+set hidden
 
 """""""""""
 """ Theming
 """""""""""
 syntax on
 set background=dark
-let g:gruvbox_contrast_dark='hard'
-let g:gruvbox_italic='1'
-let g:gruvboxe_bold='0'
 let g:one_allow_italics = 1
 colorscheme one
 
@@ -71,6 +71,12 @@ let g:SuperTabCrMapping = 1
 highlight SignifySignChange guibg='#61afef' guifg='#61afef' 
 highlight SignifySignAdd guibg='#98c379' guifg='#98c379'
 highlight SignifySignDelete guibg='#d19a66' guifg='#d19a66'
+
+let g:indent_guides_auto_colors = 1
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_width = 2
+hi IndentGuidesOdd  guibg='#2c323c' ctermbg=3
+hi IndentGuidesEven guibg='#000' ctermbg=4
 
 " Airline
 let g:airline_theme='one'
@@ -95,6 +101,7 @@ highlight ALEWarningSign guibg='#be5046' guifg='#be5046'
 map <C-n> :NERDTreeToggle<CR>
 nnoremap <Space> i_<Esc>r
 nnoremap <esc> :noh<return><esc>
+map <C-s> :e ~/Desktop/scratchpad.md<return>
 
 """""""""""""""""
 """ Bug fixes etc
