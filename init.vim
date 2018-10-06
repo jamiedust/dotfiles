@@ -22,7 +22,6 @@ Plug 'sjl/vitality.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'rakr/vim-one'
 Plug 'mileszs/ack.vim'
-Plug 'nathanaelkane/vim-indent-guides'
 call plug#end()
 
 """""""""""""""
@@ -49,7 +48,9 @@ set relativenumber
 set splitright
 set splitbelow
 set cursorline
+set cursorcolumn
 set hidden
+set clipboard=unnamed
 
 """""""""""
 """ Theming
@@ -64,19 +65,13 @@ colorscheme one
 """"""""""""""""""
 let g:javascript_plugin_flow = 1
 let g:javascript_plugin_jsdoc = 1
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|vendor\'
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|vendor|coverage)|(\.(swp|ico|git|DS_Store))$'
 let g:ctrlp_working_path_mode = 'w'
 let g:SuperTabCrMapping = 1
 
 highlight SignifySignChange guibg='#61afef' guifg='#61afef' 
 highlight SignifySignAdd guibg='#98c379' guifg='#98c379'
 highlight SignifySignDelete guibg='#d19a66' guifg='#d19a66'
-
-let g:indent_guides_auto_colors = 1
-let g:indent_guides_start_level = 2
-let g:indent_guides_guide_width = 2
-hi IndentGuidesOdd  guibg='#2c323c' ctermbg=3
-hi IndentGuidesEven guibg='#000' ctermbg=4
 
 " Airline
 let g:airline_theme='one'
