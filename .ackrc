@@ -1,0 +1,3 @@
+--ignore-dir=is:node_modules
+--ignore-dir=is:vendor
+--ignore-dir=is:coverage

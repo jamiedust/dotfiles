@@ -82,10 +82,10 @@ let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#whitespace#enabled = 1
 
 " ALE
-let g:ale_linters = {
-\   'javascript': ['eslint'],
-\}
+let g:ale_linters = { 'javascript': ['eslint'] }
+let g:ale_fixers = { 'javascript': ['prettier'], 'css': ['prettier'] }
 let g:ale_javascript_eslint_executable = 'eslint'
+let g:ale_fix_on_save = 1
 let g:airline#extensions#ale#enabled = 1
 highlight ALEErrorSign guibg='#f74b3c' guifg='#f74b3c'
 highlight ALEWarningSign guibg='#be5046' guifg='#be5046'
@@ -97,6 +97,7 @@ map <C-n> :NERDTreeToggle<CR>
 nnoremap <Space> i_<Esc>r
 nnoremap <esc> :noh<return><esc>
 map <C-s> :e ~/Desktop/scratchpad.md<return>
+map <C-d> :%bd\|e#\|bd#<CR>
 
 """""""""""""""""
 """ Bug fixes etc
