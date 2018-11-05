@@ -5,7 +5,8 @@ require 'english'
 # Copy config files into this directory
 [
   '.config/nvim/init.vim',
-  '.zshrc'
+  '.zshrc',
+  '.ackrc'
 ].each do |file|
   begin
     FileUtils.cp("#{ENV['HOME']}/#{file}", __dir__)
