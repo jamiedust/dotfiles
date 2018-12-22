@@ -20,6 +20,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'farmergreg/vim-lastplace'
 Plug 'sjl/vitality.vim'
 Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
 Plug 'rakr/vim-one'
 Plug 'mileszs/ack.vim'
 call plug#end()
@@ -68,6 +69,7 @@ let g:javascript_plugin_jsdoc = 1
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|vendor|coverage)|(\.(swp|ico|git|DS_Store))$'
 let g:ctrlp_working_path_mode = 'w'
 let g:SuperTabCrMapping = 1
+let NERDSpaceDelims = 1
 
 highlight SignifySignChange guibg='#61afef' guifg='#61afef' 
 highlight SignifySignAdd guibg='#98c379' guifg='#98c379'
@@ -98,6 +100,7 @@ nnoremap <Space> i_<Esc>r
 nnoremap <esc> :noh<return><esc>
 map <C-s> :e ~/Desktop/scratchpad.md<return>
 map <C-d> :%bd\|e#\|bd#<CR>
+nnoremap <Leader>a :Ack!<Space>
 
 """""""""""""""""
 """ Bug fixes etc

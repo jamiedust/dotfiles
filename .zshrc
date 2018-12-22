@@ -15,11 +15,10 @@ source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
 PATH=$HOME/bin:/usr/local/bin:~/.fastlane/bin:~/.nvm/:~/Library/Android/sdk:~/Library/Android/sdk/tools:~/Library/Android/sdk/platform-tools:~/Library/Android/sdk/platform-tools/adb:~/samsung-tv-sdk:~/tizen-sdk/tools/ide/bin:~/samsung-tv-sdk/tools/ide/bin/tizen:~/webOS_TV_SDK/CLI/bin$PATH
 
-alias zshrc="nvim ~/.zshrc"
-alias nvimrc="nvim ~/.config/nvim/init.vim"
+alias zshrc="nvim ~/dotfiles/.zshrc"
+alias nvimrc="nvim ~/dotfiles/init.vim"
 alias vim="nvim"
 alias vi="nvim"
-alias backupconfig="/Users/jamie.woolgar/dev/jamie/config-files/backup.rb"
 
 # NVM
 
