@@ -23,6 +23,9 @@ Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'rakr/vim-one'
 Plug 'mileszs/ack.vim'
+Plug 'unblevable/quick-scope'
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
 call plug#end()
 
 """""""""""""""
@@ -70,6 +73,7 @@ let g:ctrlp_custom_ignore = '\v[\/](node_modules|vendor|coverage)|(\.(swp|ico|gi
 let g:ctrlp_working_path_mode = 'w'
 let g:SuperTabCrMapping = 1
 let NERDSpaceDelims = 1
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 highlight SignifySignChange guibg='#61afef' guifg='#61afef' 
 highlight SignifySignAdd guibg='#98c379' guifg='#98c379'
@@ -98,9 +102,14 @@ highlight ALEWarningSign guibg='#be5046' guifg='#be5046'
 map <C-n> :NERDTreeToggle<CR>
 nnoremap <Space> i_<Esc>r
 nnoremap <esc> :noh<return><esc>
-map <C-s> :e ~/Desktop/scratchpad.md<return>
 map <C-d> :%bd\|e#\|bd#<CR>
 nnoremap <Leader>a :Ack!<Space>
+nnoremap <Leader>r :e ~/dotfiles/init.vim<return>
+map <Leader>s :e ~/Desktop/scratchpad.md<return>
+map <Leader>f :FZF<return>
+noremap <C-p> :FZF<return>
+map <Leader>g :Rg<return>
+map <Leader>b :Buffers<return>
 
 """""""""""""""""
 """ Bug fixes etc

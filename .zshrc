@@ -12,6 +12,7 @@ plugins=(git colored-man colorize github brew osx zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
+source "$HOME/set_env.sh"
 
 PATH=$HOME/bin:/usr/local/bin:~/.fastlane/bin:~/.nvm/:~/Library/Android/sdk:~/Library/Android/sdk/tools:~/Library/Android/sdk/platform-tools:~/Library/Android/sdk/platform-tools/adb:~/samsung-tv-sdk:~/tizen-sdk/tools/ide/bin:~/samsung-tv-sdk/tools/ide/bin/tizen:~/webOS_TV_SDK/CLI/bin$PATH
 
