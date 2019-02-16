@@ -24,6 +24,11 @@ Plug 'rakr/vim-one'
 Plug 'unblevable/quick-scope'
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'bkad/CamelCaseMotion'
+Plug 'tpope/vim-surround'
+Plug 'natebosch/vim-lsc'
+" Plug 'prabirshrestha/async.vim'
+" Plug 'prabirshrestha/vim-lsp'
 call plug#end()
 
 """""""""""""""
@@ -62,6 +67,26 @@ set background=dark
 let g:one_allow_italics = 1
 colorscheme one
 
+"""""""""""""""""""
+"" Language Servers
+"""""""""""""""""""
+
+let g:lsc_server_commands = {
+  \ 'javascript': '/Users/jamie.woolgar/.nvm/versions/node/v9.11.1/bin/flow',
+  \ 'javascript.jsx': '/Users/jamie.woolgar/.nvm/versions/node/v9.11.1/bin/flow',
+  \ 'php': 'php ~/.composer/vendor/bin/php-language-server.php'
+  \ }
+
+let g:lsc_auto_map = v:true
+let g:lsc_auto_map = {
+  \ 'defaults': v:true,
+  \ 'NextReference': '<Leader-n>',
+  \ 'PreviousReference': '<Leader-p>',
+  \ 'FindReferences': '<leader>r'
+  \ }
+
+autocmd CompleteDone * silent! pclose
+
 """"""""""""""""""
 """ Plugins config
 """"""""""""""""""
@@ -69,6 +94,7 @@ let g:javascript_plugin_flow = 1
 let g:javascript_plugin_jsdoc = 1
 let g:SuperTabCrMapping = 1
 let NERDSpaceDelims = 1
+let NERDTreeHijackNetrw = 0
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
@@ -85,10 +111,11 @@ let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#whitespace#enabled = 1
 
 " ALE
-let g:ale_linters = { 'javascript': ['eslint'] }
+let g:ale_linters = { 'javascript': ['eslint', 'flow'] }
 let g:ale_fixers = { 'javascript': ['prettier'], 'css': ['prettier'] }
 let g:ale_javascript_eslint_executable = 'eslint'
 let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 1
 let g:airline#extensions#ale#enabled = 1
 highlight ALEErrorSign guibg='#f74b3c' guifg='#f74b3c'
 highlight ALEWarningSign guibg='#be5046' guifg='#be5046'
@@ -97,6 +124,7 @@ highlight ALEWarningSign guibg='#be5046' guifg='#be5046'
 """ Key mappings
 """"""""""""""""
 map <C-n> :NERDTreeToggle<CR>
+nnoremap <C-w> <C-w>w
 nnoremap <Space> i_<Esc>r
 nnoremap <esc> :noh<return><esc>
 map <C-d> :%bd\|e#\|bd#<CR>
@@ -106,6 +134,8 @@ map <Leader>f :FZF<return>
 map <C-p> :FZF<return>
 map <Leader>g :Rg<return>
 map ; :Buffers<return>
+map <silent> e <Plug>CamelCaseMotion_e
+sunmap e
 
 """""""""""""""""
 """ Commands

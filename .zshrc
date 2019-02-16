@@ -14,14 +14,14 @@ source $ZSH/oh-my-zsh.sh
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 source "$HOME/set_env.sh"
 
-PATH=$HOME/bin:/usr/local/bin:~/.fastlane/bin:~/.nvm/:~/Library/Android/sdk:~/Library/Android/sdk/tools:~/Library/Android/sdk/platform-tools:~/Library/Android/sdk/platform-tools/adb:~/samsung-tv-sdk:~/tizen-sdk/tools/ide/bin:~/samsung-tv-sdk/tools/ide/bin/tizen:~/webOS_TV_SDK/CLI/bin$PATH
+PATH=$HOME/bin:/usr/local/bin:~/.nvm/:$HOME/.composer/vendor/bin:~/Library/Android/sdk:~/Library/Android/sdk/tools:~/Library/Android/sdk/platform-tools:~/Library/Android/sdk/platform-tools/adb:$PATH
 
 alias zshrc="nvim ~/dotfiles/.zshrc"
 alias nvimrc="nvim ~/dotfiles/init.vim"
 alias vim="nvim"
 alias vi="nvim"
 
-export FZF_DEFAULT_COMMAND="rg --files --color=never"
+export FZF_DEFAULT_COMMAND="rg --files --hidden --color=never"
 
 # NVM
 
