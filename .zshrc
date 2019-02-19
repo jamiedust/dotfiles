@@ -21,7 +21,7 @@ alias nvimrc="nvim ~/dotfiles/init.vim"
 alias vim="nvim"
 alias vi="nvim"
 
-export FZF_DEFAULT_COMMAND="rg --files --hidden --color=never"
+export FZF_DEFAULT_COMMAND="rg --files --hidden --color=never -g '!.git/**'"
 
 # NVM
 
