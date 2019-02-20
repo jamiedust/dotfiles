@@ -27,8 +27,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'bkad/CamelCaseMotion'
 Plug 'tpope/vim-surround'
 Plug 'natebosch/vim-lsc'
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp'
+Plug 'tpope/vim-fugitive'
 call plug#end()
 
 """""""""""""""
@@ -82,7 +81,7 @@ let g:lsc_auto_map = {
   \ 'defaults': v:true,
   \ 'NextReference': '<Leader-n>',
   \ 'PreviousReference': '<Leader-p>',
-  \ 'FindReferences': '<leader>r'
+  \ 'FindReferences': '<leader>R'
   \ }
 
 autocmd CompleteDone * silent! pclose
