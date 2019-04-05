@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/jamie.woolgar/.oh-my-zsh
+export ZSH=/Users/jwoolgar/.oh-my-zsh
 
 ZSH_THEME=agnoster
 
@@ -11,8 +11,7 @@ ZSH_THEME=agnoster
 plugins=(git colored-man colorize github docker brew osx zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
-source "$HOME/.homesick/repos/homeshick/homeshick.sh"
-source "$HOME/set_env.sh"
+# source "$HOME/set_env.sh"
 
 PATH=$HOME/bin:/usr/local/bin:~/.nvm/:$HOME/.composer/vendor/bin:~/Library/Android/sdk:~/Library/Android/sdk/tools:~/Library/Android/sdk/platform-tools:~/Library/Android/sdk/platform-tools/adb:$PATH
 
@@ -23,19 +22,4 @@ alias vi="nvim"
 
 export FZF_DEFAULT_COMMAND="rg --files --hidden --color=never -g '!.git/**'"
 
-# NVM
-
-export NVM_DIR="/Users/jamie.woolgar/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
-autoload -U add-zsh-hook
-load-nvmrc() {
-  if [[ -f .nvmrc && -r .nvmrc ]]; then
-    nvm use
-  elif [[ $(nvm version) != $(nvm version default)  ]]; then
-    echo "Reverting to nvm default version"
-    nvm use --delete-prefix default
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
