@@ -11,7 +11,8 @@ endif
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
-" Plug 'w0rp/ale'
+Plug 'gabrielelana/vim-markdown'
+Plug 'w0rp/ale'
 Plug 'mhinz/vim-signify'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -25,7 +26,7 @@ Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'bkad/CamelCaseMotion'
 Plug 'tpope/vim-surround'
-Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+Plug 'kevinhui/vim-docker-tools'
 Plug 'tpope/vim-fugitive'
 call plug#end()
 
@@ -56,6 +57,7 @@ set cursorline
 set cursorcolumn
 set hidden
 set clipboard=unnamed
+set wcm=<tab>
 
 """""""""""
 """ Theming
@@ -64,10 +66,6 @@ syntax on
 set background=dark
 let g:one_allow_italics = 1
 colorscheme one
-
-"""""""""""""""""""
-"" Language Servers
-"""""""""""""""""""
 
 """"""""""""""""""
 """ Plugins config
@@ -79,6 +77,7 @@ let NERDSpaceDelims = 1
 let NERDTreeHijackNetrw = 0
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:fzf_history_dir = '~/.local/share/fzf-history'
+let g:markdown_enable_spell_checking = 0
 
 highlight SignifySignChange guibg='#61afef' guifg='#61afef' 
 highlight SignifySignAdd guibg='#98c379' guifg='#98c379'
@@ -92,31 +91,20 @@ let g:airline#extensions#tabline#left_alt_sep = '::'
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#whitespace#enabled = 1
 
-" COC
-nmap <silent> gd <Plug>(coc-definition)
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if &filetype == 'vim'
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-highlight CocErrorSign guibg='#f74b3c' guifg='#f74b3c'
-highlight CocWarningSign guibg='#be5046' guifg='#be5046'
-let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
-
 " ALE
-" let g:ale_linters = { 'javascript': ['eslint'] }
-" let g:ale_javascript_eslint_executable = 'eslint'
-" let g:ale_fix_on_save = 1
-" let g:ale_completion_enabled = 1
-" let g:airline#extensions#ale#enabled = 1
-" highlight ALEErrorSign guibg='#f74b3c' guifg='#f74b3c'
-" highlight ALEWarningSign guibg='#be5046' guifg='#be5046'
+let g:ale_linters = { 'javascript': ['eslint', 'tsserver'] }
+let g:ale_fixers = { 'javascript': ['eslint'] }
+let g:ale_javascript_eslint_executable = 'eslint'
+let g:ale_typescript_tsserver_use_global = 1
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 1
+let g:airline#extensions#ale#enabled = 1
+set completeopt+=noinsert " https://github.com/w0rp/ale/issues/1700#issuecomment-402797948 
+highlight ALEErrorSign guibg='#f74b3c' guifg='#f74b3c'
+highlight ALEWarningSign guibg='#be5046' guifg='#be5046'
+noremap K :ALEHover<CR>
+noremap <Leader>d :ALEGoToDefinition<CR>
+noremap <Leader>gr :ALEFindReferences<CR>
 
 """"""""""""""""
 """ Key mappings

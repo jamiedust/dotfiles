@@ -1,6 +1,4 @@
 {
-  "diagnostic": {
-    "displayByAle": false
-  },
+  "diagnostic.displayByAle": true,
   "javascript.validate.enable": false
 }
