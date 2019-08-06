@@ -13,7 +13,7 @@ plugins=(git colored-man-pages colorize github docker brew osx)
 source $ZSH/oh-my-zsh.sh
 # source "$HOME/set_env.sh"
 
-export PATH=$HOME/bin:/usr/local/bin:~/dev/webdis:$HOME/.composer/vendor/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$HOME/.composer/vendor/bin:$PATH
 
 alias zshrc="nvim ~/dotfiles/.zshrc"
 alias nvimrc="nvim ~/dotfiles/init.vim"
@@ -23,11 +23,9 @@ alias vi="nvim"
 export FZF_DEFAULT_COMMAND="rg --files --hidden --color=never -g '!.git/**'"
 
 listening() {
-    if [ $# -eq 0 ]; then
-      lsof -iTCP -sTCP:LISTEN -n -P
-    elif [ $# -eq 1 ]; then
-      lsof -iTCP -sTCP:LISTEN -n -P | grep $1
-    fi
+  if [ $# -eq 0 ]; then
+    lsof -iTCP -sTCP:LISTEN -n -P
+  elif [ $# -eq 1 ]; then
+    lsof -iTCP -sTCP:LISTEN -n -P | grep $1
+  fi
 }
-
-# export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

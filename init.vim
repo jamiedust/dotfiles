@@ -1,38 +1,48 @@
 " Enable true colour
-if (empty($TMUX))
- if (has("nvim"))
-   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
- endif
- if (has("termguicolors"))
-   set termguicolors
- endif
+if (has("termguicolors"))
+  set termguicolors
 endif
 
+""" PLUGINS "
+
 call plug#begin('~/.local/share/nvim/plugged')
+" syntax
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
+Plug 'chooh/brightscript.vim'
 Plug 'gabrielelana/vim-markdown'
+
+" Colours
+Plug 'rakr/vim-one'
+Plug 'hzchirs/vim-material'
+
+" language support
 Plug 'w0rp/ale'
+
+" GIT
 Plug 'mhinz/vim-signify'
+Plug 'tpope/vim-fugitive'
+
+" UI
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'farmergreg/vim-lastplace'
 Plug 'sjl/vitality.vim'
 Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/nerdcommenter'
-Plug 'rakr/vim-one'
-Plug 'unblevable/quick-scope'
-Plug '/usr/local/opt/fzf'
+" Plug 'Yggdroot/indentLine'
+
+" Utilities
 Plug 'junegunn/fzf.vim'
+Plug '/usr/local/opt/fzf'
+Plug 'scrooloose/nerdcommenter'
+Plug 'unblevable/quick-scope'
 Plug 'bkad/CamelCaseMotion'
 Plug 'tpope/vim-surround'
 Plug 'kevinhui/vim-docker-tools'
-Plug 'tpope/vim-fugitive'
 call plug#end()
 
-"""""""""""""""
-""" Base config
-"""""""""""""""
+""" SETTINGS "
+
 set backup
 set backupdir=/private/tmp
 set dir=/private/tmp
@@ -40,7 +50,7 @@ set backspace=indent,eol,start
 set ruler
 set tabstop=2
 set expandtab
-set mouse=n
+" set mouse=n
 set shiftwidth=2
 set smarttab
 set linebreak
@@ -54,17 +64,17 @@ set relativenumber
 set splitright
 set splitbelow
 set cursorline
-set cursorcolumn
+" set cursorcolumn
 set hidden
 set clipboard=unnamed
 set wcm=<tab>
 
-"""""""""""
-""" Theming
-"""""""""""
+""" THEME "
+
 syntax on
 set background=dark
 let g:one_allow_italics = 1
+" colorscheme vim-material
 colorscheme one
 
 """"""""""""""""""
@@ -85,6 +95,7 @@ highlight SignifySignDelete guibg='#d19a66' guifg='#d19a66'
 
 " Airline
 let g:airline_theme='one'
+" let g:airline_theme='material'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '::'
@@ -128,18 +139,3 @@ sunmap e
 """""""""""""""""
 
 command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
-
-"""""""""""""""""
-""" Bug fixes etc
-"""""""""""""""""
-
-""" fix airline slowness leaving insert mode "
-if ! has('gui_running')
-  set ttimeoutlen=10
-  augroup FastEscape
-    autocmd!
-    au InsertEnter * set timeoutlen=0
-    au InsertLeave * set timeoutlen=1000
-  augroup END
-endif
-
