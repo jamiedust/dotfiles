@@ -1,20 +1,15 @@
-" Enable true colour
-if (has("termguicolors"))
-  set termguicolors
-endif
-
-""" PLUGINS "
-
 call plug#begin('~/.local/share/nvim/plugged')
 " syntax
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'chooh/brightscript.vim'
 Plug 'gabrielelana/vim-markdown'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'kentaroi/cocoa.vim'
 
 " Colours
 Plug 'rakr/vim-one'
-Plug 'hzchirs/vim-material'
 
 " language support
 Plug 'w0rp/ale'
@@ -39,9 +34,14 @@ Plug 'unblevable/quick-scope'
 Plug 'bkad/CamelCaseMotion'
 Plug 'tpope/vim-surround'
 Plug 'kevinhui/vim-docker-tools'
+Plug 'editorconfig/editorconfig-vim'
 call plug#end()
 
-""" SETTINGS "
+
+if (has("termguicolors"))
+  set termguicolors
+endif
+
 
 set backup
 set backupdir=/private/tmp
@@ -68,13 +68,12 @@ set cursorline
 set hidden
 set clipboard=unnamed
 set wcm=<tab>
-
-""" THEME "
+set shortmess=a
 
 syntax on
 set background=dark
 let g:one_allow_italics = 1
-" colorscheme vim-material
+let g:java_highlight_functions = 1
 colorscheme one
 
 """"""""""""""""""
@@ -88,6 +87,8 @@ let NERDTreeHijackNetrw = 0
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 let g:markdown_enable_spell_checking = 0
+let g:NERDTreeQuitOnOpen = 1
+let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
 
 highlight SignifySignChange guibg='#61afef' guifg='#61afef' 
 highlight SignifySignAdd guibg='#98c379' guifg='#98c379'
@@ -95,7 +96,6 @@ highlight SignifySignDelete guibg='#d19a66' guifg='#d19a66'
 
 " Airline
 let g:airline_theme='one'
-" let g:airline_theme='material'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '::'
@@ -117,25 +117,19 @@ noremap K :ALEHover<CR>
 noremap <Leader>d :ALEGoToDefinition<CR>
 noremap <Leader>gr :ALEFindReferences<CR>
 
-""""""""""""""""
-""" Key mappings
-""""""""""""""""
+""" KEY MAPPINGS "
 map <C-n> :NERDTreeToggle<CR>
-nnoremap <C-w> <C-w>w
 nnoremap , i_<Esc>r
 nnoremap <esc> :noh<return><esc>
 map <C-d> :%bd\|e#\|bd#<CR>
 nnoremap <Leader>r :e ~/dotfiles/init.vim<return>
 map <Leader>s :e ~/Desktop/scratchpad.md<return>
-map <Leader>f :FZF<return>
+
 map <C-p> :FZF<return>
 map <Leader>g :Rg<return>
-map ; :Buffers<return>
+map ; :Buffers \| :NERDTreeClose<return>
+
 map <silent> e <Plug>CamelCaseMotion_e
 sunmap e
-
-"""""""""""""""""
-""" Commands
-"""""""""""""""""
 
 command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
