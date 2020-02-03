@@ -24,6 +24,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'farmergreg/vim-lastplace'
 Plug 'sjl/vitality.vim'
 Plug 'scrooloose/nerdtree'
+Plug 'editorconfig/editorconfig-vim'
 " Plug 'Yggdroot/indentLine'
 
 " Utilities
@@ -90,6 +91,8 @@ let g:markdown_enable_spell_checking = 0
 let g:NERDTreeQuitOnOpen = 1
 let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
 
+autocmd FileType brs setlocal commentstring='%s
+
 highlight SignifySignChange guibg='#61afef' guifg='#61afef' 
 highlight SignifySignAdd guibg='#98c379' guifg='#98c379'
 highlight SignifySignDelete guibg='#d19a66' guifg='#d19a66'
@@ -103,11 +106,11 @@ let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#whitespace#enabled = 1
 
 " ALE
-let g:ale_linters = { 'javascript': ['eslint', 'tsserver'] }
-let g:ale_fixers = { 'javascript': ['eslint'] }
+let g:ale_linters = { 'javascript': ['eslint', 'tsserver'], 'objc': ['ccls', 'clang', 'clangd'] }
+let g:ale_fixers = { 'javascript': ['eslint'], '*': ['trim_whitespace'] }
 let g:ale_javascript_eslint_executable = 'eslint'
 let g:ale_typescript_tsserver_use_global = 1
-let g:ale_fix_on_save = 1
+let g:ale_fix_on_save = 0
 let g:ale_completion_enabled = 1
 let g:airline#extensions#ale#enabled = 1
 set completeopt+=noinsert " https://github.com/w0rp/ale/issues/1700#issuecomment-402797948 
