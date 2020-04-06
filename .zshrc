@@ -1,33 +1,41 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 export ZSH=/Users/jwoolgar/.oh-my-zsh
 
-ZSH_THEME=agnoster
+ZSH_THEME="powerlevel10k/powerlevel10k" # agnoster
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#666"
+DEFAULT_USER="jwoolgar"
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(git colored-man-pages colorize github docker brew osx)
+# ~/.oh-my-zsh/[custom]/plugins/
+plugins=(
+  git
+  colored-man-pages
+  colorize
+  github
+  docker
+  brew
+  osx
+  zsh-autosuggestions
+)
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/env.sh
 
-export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH
-export PATH=$HOME/.composer/vendor/bin:$PATH
-export PATH=$HOME/Library/Android/sdk/tools:$PATH
-export PATH=$HOME/Library/Android/sdk/platform-tools:$PATH
-export PATH=/usr/local/Cellar/node/12.12.0/bin/:$PATH
-
 export FZF_DEFAULT_COMMAND="rg --files --hidden --color=never -g '!.git/**'"
 
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH
+export PATH=$HOME/.composer/vendor/bin:$PATH
+export PATH=$HOME/Library/Android/sdk/tools:$HOME/Library/Android/sdk/platform-tools:$PATH
+export PATH=/usr/local/Cellar/node/12.12.0/bin/:$PATH # why?
 
+alias {vim,vi,im}="nvim"
 alias zshrc="nvim ~/dotfiles/.zshrc"
-alias nvimrc="nvim ~/dotfiles/init.vim"
-alias vim="nvim"
-alias vi="nvim"
-alias im="nvim"
 alias webdis="cd ~/dev/webdis ; ./webdis & ; cd -"
 
+# whats on the port?
 listening() {
   if [ $# -eq 0 ]; then
     lsof -iTCP -sTCP:LISTEN -n -P
@@ -36,13 +44,12 @@ listening() {
   fi
 }
 
-prompt_context() {
-  # https://github.com/agnoster/agnoster-zsh-theme/issues/39#issuecomment-307338817
-  if [[ "$USER" != "$LOGNAME" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
-  fi
+# load nvm and switch version
+use_nvm() {
+  NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  nvm use $1
 }
 
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# load p10k config
+[[ ! -f ~/dotfiles/.p10k.zsh ]] || source ~/dotfiles.p10k.zsh

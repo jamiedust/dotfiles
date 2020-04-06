@@ -7,12 +7,14 @@ Plug 'gabrielelana/vim-markdown'
 Plug 'leafgarland/typescript-vim'
 Plug 'peitalin/vim-jsx-typescript'
 Plug 'kentaroi/cocoa.vim'
+Plug 'bfrg/vim-cpp-modern'
 
 " Colours
 Plug 'rakr/vim-one'
 
 " language support
 Plug 'w0rp/ale'
+Plug 'pechorin/any-jump.vim'
 
 " GIT
 Plug 'mhinz/vim-signify'
@@ -36,13 +38,12 @@ Plug 'bkad/CamelCaseMotion'
 Plug 'tpope/vim-surround'
 Plug 'kevinhui/vim-docker-tools'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'heavenshell/vim-jsdoc'
 call plug#end()
-
 
 if (has("termguicolors"))
   set termguicolors
 endif
-
 
 set backup
 set backupdir=/private/tmp
@@ -51,7 +52,6 @@ set backspace=indent,eol,start
 set ruler
 set tabstop=2
 set expandtab
-" set mouse=n
 set shiftwidth=2
 set smarttab
 set linebreak
@@ -91,9 +91,13 @@ let g:markdown_enable_spell_checking = 0
 let g:NERDTreeQuitOnOpen = 1
 let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
 
+let g:jsdoc_allow_input_prompt = 1
+let g:jsdoc_input_description = 0
+let g:jsdoc_access_descriptions = 0
+
 autocmd FileType brs setlocal commentstring='%s
 
-highlight SignifySignChange guibg='#61afef' guifg='#61afef' 
+highlight SignifySignChange guibg='#61afef' guifg='#61afef'
 highlight SignifySignAdd guibg='#98c379' guifg='#98c379'
 highlight SignifySignDelete guibg='#d19a66' guifg='#d19a66'
 
@@ -113,7 +117,7 @@ let g:ale_typescript_tsserver_use_global = 1
 let g:ale_fix_on_save = 0
 let g:ale_completion_enabled = 1
 let g:airline#extensions#ale#enabled = 1
-set completeopt+=noinsert " https://github.com/w0rp/ale/issues/1700#issuecomment-402797948 
+set completeopt+=noinsert " https://github.com/w0rp/ale/issues/1700#issuecomment-402797948
 highlight ALEErrorSign guibg='#f74b3c' guifg='#f74b3c'
 highlight ALEWarningSign guibg='#be5046' guifg='#be5046'
 noremap K :ALEHover<CR>
