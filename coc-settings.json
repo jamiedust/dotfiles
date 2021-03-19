@@ -1,0 +1,6 @@
+{
+  "diagnostic.displayByAle": true,
+  "javascript.validate.enable": true,
+  "clangd.path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clangd",
+  "clangd.compilationDatabasePath": "/Users/jwoolgar/dev/ott/client-libs/cpp/build.linux"
+}
