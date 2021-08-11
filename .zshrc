@@ -15,14 +15,17 @@ plugins=(
   zsh-autosuggestions
 )
 
-source $ZSH/oh-my-zsh.sh
-source $HOME/env.sh
-
 export FZF_DEFAULT_COMMAND="rg --files --hidden --color=never -g '!.git/**'"
 
 export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH
 export PATH=$HOME/.composer/vendor/bin:$PATH
 export PATH=$HOME/Library/Android/sdk/tools:$HOME/Library/Android/sdk/platform-tools:$PATH
+
+# https://github.com/Schniz/fnm
+eval "$(fnm env)"
+
+source $ZSH/oh-my-zsh.sh
+source $HOME/env.sh
 
 alias {vim,vi,im}="nvim"
 alias zshrc="nvim ~/dotfiles/.zshrc"
@@ -36,6 +39,3 @@ listening() {
     lsof -iTCP -sTCP:LISTEN -n -P | grep $1
   fi
 }
-
-# https://github.com/Schniz/fnm
-eval "$(fnm env)"

@@ -9,13 +9,9 @@ Plug 'mxw/vim-jsx'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'kentaroi/cocoa.vim'
 Plug 'keith/swift.vim'
-Plug 'bfrg/vim-cpp-modern'
-Plug 'chooh/brightscript.vim'
-Plug 'gabrielelana/vim-markdown'
 
 " language support
 Plug 'w0rp/ale'
-" Plug 'pechorin/any-jump.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " GIT
@@ -29,7 +25,6 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'farmergreg/vim-lastplace'
 Plug 'sjl/vitality.vim'
 Plug 'scrooloose/nerdtree'
-Plug 'editorconfig/editorconfig-vim'
 
 " Utilities
 Plug 'junegunn/fzf.vim'
@@ -40,8 +35,6 @@ Plug 'bkad/CamelCaseMotion'
 Plug 'tpope/vim-surround'
 Plug 'kevinhui/vim-docker-tools'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'heavenshell/vim-jsdoc'
-Plug 'PeterRincker/vim-argumentative'
 call plug#end()
 
 """"""""""""""""""""""""""""""""""
@@ -159,8 +152,8 @@ call ale#linter#Define('brs', {
 \})
 
 let g:ale_linters = {
-  \'javascript': ['eslint', 'tsserver'],
-  \'typescript': ['eslint', 'tsserver'],
+  \'javascript': ['eslint'],
+  \'typescript': ['eslint'],
   \'brs': ['eslint'],
   \'objc': ['ccls', 'clang', 'clangd'],
   \'cpp': ['clangd']
