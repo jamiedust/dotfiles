@@ -387,7 +387,7 @@
   "AWDS Pane Directory" : "",
   "Blur" : false,
   "Vertical Spacing" : 1.05,
-  "Normal Font" : "SourceCodeProForPowerline-Regular 14",
+  "Normal Font" : "SauceCodeProNerdFontComplete-Regular 14",
   "Use Underline Color" : false,
   "Ansi 7 Color" : {
     "Green Component" : 0.63529411759999999,
