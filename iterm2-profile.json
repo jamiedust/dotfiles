@@ -31,6 +31,7 @@
     "Green Component" : 0.26666666666666666
   },
   "Mouse Reporting" : true,
+  "Cursor Boost" : 0,
   "Ansi 4 Color" : {
     "Green Component" : 0.61176472902297974,
     "Red Component" : 0.30196079611778259,
@@ -367,9 +368,11 @@
     "Blue Component" : 0.38431373238563538
   },
   "Ansi 8 Color" : {
-    "Green Component" : 0.12941177189350128,
-    "Red Component" : 0.11764705926179886,
-    "Blue Component" : 0.15294118225574493
+    "Red Component" : 0.39465758437290788,
+    "Color Space" : "sRGB",
+    "Blue Component" : 0.404388427734375,
+    "Alpha Component" : 1,
+    "Green Component" : 0.39790119882673025
   },
   "Badge Color" : {
     "Red Component" : 1,

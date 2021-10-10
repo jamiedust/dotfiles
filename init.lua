@@ -1,3 +1,6 @@
+-- TODO
+-- prettier auto format
+
 --
 -- options
 --
@@ -22,12 +25,11 @@ vim.o.relativenumber = true
 vim.o.splitright = true
 vim.o.splitbelow = true
 vim.o.cursorline = true
--- vim.o.cursorcolumn = true
 vim.o.hidden = true
 vim.o.clipboard = "unnamed"
--- vim.o.wcm = <tab> 
 vim.o.shortmess = "a"
 vim.o.termguicolors = true
+vim.o.completeopt = "menu,menuone,noselect,noinsert"
 
 local disabled_built_ins = {
     "netrw",
@@ -53,22 +55,14 @@ for _, plugin in pairs(disabled_built_ins) do
     vim.g["loaded_" .. plugin] = 1
 end
 
--- Don't show status line on certain windows
--- vim.cmd [[ au TermOpen term://* setlocal nonumber norelativenumber ]]
--- vim.cmd [[let hidden_statusline = luaeval('require("chadrc").ui.hidden_statusline') | autocmd BufEnter,BufWinEnter,WinEnter,CmdwinEnter,TermEnter * nested if index(hidden_statusline, &ft) >= 0 | set laststatus=0 | else | set laststatus=2 | endif]]
-
 --
 -- key mappings
 --
 
-local set_keymap = vim.api.nvim_set_keymap
-local del_keymap = vim.api.nvim_del_keymap
-
--- nvim_set_keymap('n' ',', 'i_<Esc>r', { noremap = true })
-set_keymap("n", "<Esc>", ":noh<Return><Esc>", { noremap = true })
-set_keymap("n", "<C-d>", ":%bd|e#|bd#<CR>", {})
-set_keymap("n", "<Leader>r", ":e ~/dotfiles/init.lua<Return>", { noremap = true })
-set_keymap("n", "<Leader>s", ":e ~/Desktop/scratchpad.md<Return>", {})
+vim.api.nvim_set_keymap("n", "<Esc>", ":noh<Return><Esc>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<C-d>", ":%bd|e#|bd#<CR>", {})
+vim.api.nvim_set_keymap("n", "<Leader>r", ":e ~/dotfiles/init.lua<Return>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<Leader>s", ":e ~/Desktop/scratchpad.md<Return>", {})
 
 --
 -- plugins
@@ -89,6 +83,8 @@ return require("packer").startup(function()
   use {
     "navarasu/onedark.nvim",
     config = function()
+      vim.g.onedark_darker_diagnostics = false
+      require('onedark').setup()
       vim.cmd[[colorscheme onedark]]
     end
   }
@@ -108,41 +104,57 @@ return require("packer").startup(function()
           enable = true
         },
         indent = {
-          enable = true,
+          -- TODO is this working OK?
+          enable = true
         }
       })
     end
   }
   use {
-    "hoob3rt/lualine.nvim",
+    -- "hoob3rt/lualine.nvim",
+    "shadmansaleh/lualine.nvim",
     after = "nvim-web-devicons",
     config = function()
-      require('lualine').setup({
+      require("lualine").setup({
         options = {
-          theme = 'onedark'
+          theme = "onedark",
+          component_separators = {left = "", right = ""},
+        },
+        sections = {
+          lualine_a = {"mode"},
+          lualine_b = {"branch"},
+          lualine_c = {
+            {
+              "filename",
+              file_status = true,
+              full_path = true
+            }
+          },
+          lualine_x = {"encoding", "fileformat"},
+          lualine_y = {"filetype"},
+          lualine_z = {"location"}
+        },
+        tabline = {
+          lualine_a = {"buffers"},
+          lualine_x = {
+            "diagnostics",
+            sources = {"nvim_lsp"}
+          }
         }
-      })
-    end
-  }
-  use {
-    "akinsho/nvim-bufferline.lua",
-    after = "nvim-web-devicons",
-    config = function()
-      -- TODO sort config
-      require("bufferline").setup({
-        show_buffer_icons = false,
-        show_buffer_close_icons = false,
-        show_close_icon = false,
-        diagnostics = "nvim_lsp"
       })
     end
   }
   use {
     "lewis6991/gitsigns.nvim",
-    after = "plenary.nvim",
+    requires = "plenary.nvim",
     config = function()
-      -- TODO get working
-      require('gitsigns').setup()
+      require('gitsigns').setup({
+        signs = {
+          delete = {text = '│'},
+          topdelete = {text = '│'},
+          changedelete = {text = '│'}
+        }
+      })
     end
   }
   use {
@@ -152,10 +164,25 @@ return require("packer").startup(function()
       local km = vim.api.nvim_set_keymap
       km("n", "<C-n>", ":NvimTreeToggle<CR>", { noremap = true })
       vim.g.nvim_tree_ignore = { '.git', 'node_modules', '.cache' }
-      vim.g.nvim_tree_gitignore = 1
-      vim.g.nvim_tree_auto_close = 1
+      vim.g.nvim_tree_gitignore = 0
       vim.g.nvim_tree_quit_on_open = 1
       vim.g.nvim_tree_indent_markers = 1
+      vim.g.nvim_tree_special_files = {}
+      vim.g.nvim_tree_show_icons = {
+				git = 0,
+					folders = 0,
+	files = 0,
+	folder_arrows = 0,
+      }
+      -- TODO modify icons
+    end,
+    config = function()
+      require("nvim-tree").setup({
+        auto_close = false,
+        diagnostics = {
+          enable = false
+        }
+      })
     end
   }
 
@@ -163,13 +190,12 @@ return require("packer").startup(function()
   -- utils
   --
   use "farmergreg/vim-lastplace"
-  --use {
-   -- "tpope/vim-surround",
-    --config = function()
-     -- -- TODO fix
-     -- set_keymap("n", "<C-s>", "ysiw", {})
-   -- end
- -- }
+  use {
+    "tpope/vim-surround",
+    config = function()
+      vim.api.nvim_set_keymap("n", "<C-s>", "ysiw", {})
+    end
+  }
   use {
     "unblevable/quick-scope",
     config = function()
@@ -179,9 +205,14 @@ return require("packer").startup(function()
   use {
     "terrortylor/nvim-comment",
     cmd = "CommentToggle",
+    setup = function()
+      vim.api.nvim_set_keymap("", "<Leader>cc", ":CommentToggle<CR>", {noremap = true})
+    end,
     config = function()
-      -- TODO fux
-      require('nvim_comment').setup({ comment_empty = false })
+      require('nvim_comment').setup({
+        comment_empty = false,
+        line_mapping = 'gcc'
+      })
     end
   }
   use {
@@ -191,63 +222,170 @@ return require("packer").startup(function()
       vim.g.matchup_matchparen_offscreen = {}
     end
   }
-  -- use {
-  --  "bkad/CamelCaseMotion",
-   -- config = function()
-    --  del_keymap("n", "e")
-     -- set_keymap("n", "e", "<Plug>CamelCaseMotion_e", { silent = true })
-    --end
- -- }
+  use {
+    "norcalli/nvim-colorizer.lua",
+    config = function()
+      require('colorizer').setup()
+    end
+  }
+  use {
+    "bkad/CamelCaseMotion",
+    config = function()
+      vim.api.nvim_set_keymap("", "e", "<Plug>CamelCaseMotion_e", { silent = true })
+      vim.api.nvim_del_keymap("s", "e")
+    end
+  }
 
   --
   -- Fuzzy finder
   --
-  use "nvim-telescope/telescope-media-files.nvim"
-  use { "nvim-telescope/telescope-fzf-native.nvim", run = "make" }
   use {
-    "nvim-telescope/telescope.nvim",
-    after = { "popup.nvim", "plenary.nvim", "telescope-media-files.nvim" },
-    cmd = "Telescope",
-    opt = false,
+    "ibhagwan/fzf-lua",
+    requires = { "vijaymarupudi/nvim-fzf" },
     setup = function()
       local km = vim.api.nvim_set_keymap
-      km("n", "<C-p>", ":Telescope find_files<CR>", {})
-      km("n", "<Leader>g", ":Telescope live_grep<CR>", {})
-      km("n", ";", ":Telescope buffers<CR>", {})
+      local opts = { noremap = true, silent = true }
+      km("n", "<C-P>", "<cmd>lua require('fzf-lua').files({ cmd = \"rg --files --hidden --color=never -g '!.git/**'\"})<CR>", opts)
+      km("n", "<Leader>g", "<cmd>lua require('fzf-lua').live_grep()<CR>", opts)
+      km("n", ";", "<cmd>lua require('fzf-lua').buffers()<CR>", opts)
     end,
     config = function()
-      -- TODO look into ripgrep and fzf
-      require('telescope').setup({
-       defaults = {
-          vimgrep_arguments = {
-             "rg",
-             "--color=never",
-             "--no-heading",
-             "--with-filename",
-             "--line-number",
-             "--column",
-             "--smart-case"
-          },
-          extensions = {
-            media_files = {
-               filetypes = { "png", "webp", "jpg", "jpeg" },
-               find_cmd = "rg"
-            },
-            fzf = {
-              fuzzy = true,                    -- false will only do exact matching
-              override_generic_sorter = true, -- override the generic sorter
-              override_file_sorter = true,     -- override the file sorter
-              case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
-            }
-          }
+      require('fzf-lua').setup({
+        buffers = {
+          git_icons = false
+        },
+        files = {
+          git_icons = false,
+          file_icons = false
+        },
+        grep = {
+          git_icons = false,
+          file_icons = false
         }
       })
-      require("telescope").load_extension("media_files")
-      require("telescope").load_extension("fzf")
     end
   }
 
   --
   -- LSP
   --
+  use {
+    "ms-jpq/coq_nvim",
+    branch = "coq"
+  }
+  use {
+    "neovim/nvim-lspconfig",
+    config = function()
+      local nvim_lsp = require("lspconfig")
+
+      local on_attach = function(client, bufnr)
+        local buf_map = vim.api.nvim_buf_set_keymap
+        local opts = { silent = true }
+        vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
+        vim.cmd('COQnow -s')
+
+        buf_map(bufnr, "n", "gd", ":lua vim.lsp.buf.definition()<CR>", opts)
+        buf_map(bufnr, "n", "gR", ":lua vim.lsp.buf.references()<CR>", opts)
+        buf_map(bufnr, "n", "K", ":lua vim.lsp.buf.hover()<CR>", opts)
+        buf_map(bufnr, "n", "<Leader>a", ":lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
+        buf_map(bufnr, "n", "gf", ":lua vim.lsp.buf.formatting()<CR>", opts)
+        buf_map(bufnr, "n", "gl", ":lua vim.lsp.buf.implementation()<CR>", opts)
+
+        if client.resolved_capabilities.document_formatting then
+          -- TODO doesnt seem to work?
+          vim.api.nvim_exec([[
+           augroup LspAutocommands
+             autocmd! * <buffer>
+             autocmd BufWritePost <buffer> LspFormatting
+           augroup END
+           ]], true)
+        end
+      end
+
+      -- do formatting async for improved performance
+      local format_async = function(err, _, result, _, bufnr)
+        if err ~= nil or result == nil then return end
+        if not vim.api.nvim_buf_get_option(bufnr, "modified") then
+          local view = vim.fn.winsaveview()
+          vim.lsp.util.apply_text_edits(result, bufnr)
+          vim.fn.winrestview(view)
+          if bufnr == vim.api.nvim_get_current_buf() then
+            vim.api.nvim_command("noautocmd :update")
+          end
+        end
+      end
+      vim.lsp.handlers["textDocument/formatting"] = format_async
+
+      -- Typescript lang server
+      nvim_lsp.tsserver.setup({
+        on_attach = function(client)
+          client.resolved_capabilities.document_formatting = false
+          on_attach(client)
+        end
+      })
+
+      -- Diagnostic display settings
+      local signs = { Error = " ", Warning = " ", Hint = " ", Information = " " }
+      for type, icon in pairs(signs) do
+         local hl = "LspDiagnosticsSign" .. type
+         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+      end
+      vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+        virtual_text = false,
+        signs = true,
+        underline = true,
+        update_in_insert = false
+      })
+      vim.o.updatetime = 250
+      vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.lsp.diagnostic.show_line_diagnostics({focusable=false})]]
+
+      -- TODO add CSS lsp
+
+      -- Linting and Formatting
+      nvim_lsp.diagnosticls.setup {
+        on_attach = on_attach,
+        filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+        init_options = {
+          linters = {
+            eslint = {
+              sourceName = "eslint",
+              command = "eslint_d",
+              rootPatterns = {".eslintrc.js", ".eslintrc", "package.json"},
+              debounce = 100,
+              args = {"--stdin", "--stdin-filename", "%filepath", "--format", "json"},
+              parseJson = {
+                errorsRoot = "[0].messages",
+                line = "line",
+                column = "column",
+                endLine = "endLine",
+                endColumn = "endColumn",
+                message = "${message} [${ruleId}]",
+                security = "severity"
+              },
+              securities = {[2] = "error", [1] = "warning"}
+            }
+          },
+          formatters = {
+            prettier = {
+              command = "prettier",
+              rootPatterns = {".prettierrc.js", ".prettierrc", "package.json"},
+              args = {"--stdin-filepath", "--write", "%filepath"}
+            }
+          },
+          filetypes = {
+            typescript = "eslint",
+            typescriptreact = "eslint",
+            javascript = "eslint",
+            javascriptreact = "eslint",
+          },
+          formatFiletypes = {
+            typescript = "prettier",
+            typescriptreact = "prettier",
+            javascript = "prettier",
+            javascriptreact = "prettier"
+          }
+        }
+      }
+    end
+  }
 end)

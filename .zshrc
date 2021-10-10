@@ -16,15 +16,16 @@ plugins=(
   zsh-autosuggestions
 )
 
-export FZF_DEFAULT_COMMAND="rg --files --hidden --color=never -g '!.git/**'"
-
 export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH
+
+# Disable create-react-app auto launch
+export BROWSER=none
 
 # https://github.com/Schniz/fnm
 eval "$(fnm env)"
 
 source $ZSH/oh-my-zsh.sh
-# source $HOME/env.sh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 alias {vim,vi,im}="nvim"
 alias zshrc="nvim ~/dotfiles/.zshrc"
