@@ -94,6 +94,9 @@ return require("packer").startup(function()
       require('nvim-web-devicons').setup({ default = true })
     end
   }
+  -- use "yuezk/vim-js"
+  -- use "maxmellon/vim-jsx-pretty"
+  -- use "HerringtonDarkholme/yats.vim"
   use {
     "nvim-treesitter/nvim-treesitter",
     run = ":TSUpdate",
@@ -111,8 +114,7 @@ return require("packer").startup(function()
     end
   }
   use {
-    -- "hoob3rt/lualine.nvim",
-    "shadmansaleh/lualine.nvim",
+    "nvim-lualine/lualine.nvim",
     after = "nvim-web-devicons",
     config = function()
       require("lualine").setup({
@@ -174,7 +176,6 @@ return require("packer").startup(function()
 	files = 0,
 	folder_arrows = 0,
       }
-      -- TODO modify icons
     end,
     config = function()
       require("nvim-tree").setup({
@@ -273,6 +274,30 @@ return require("packer").startup(function()
     "ms-jpq/coq_nvim",
     branch = "coq"
   }
+--   use {
+--     "jose-elias-alvarez/null-ls.nvim",
+--     after = "nvim-lspconfig",
+--     config = function()
+--       local null_ls = require("null-ls")
+
+--       -- you don't have to use these helpers and could do it yourself, too
+--       local prettier = require("null-ls.helpers").conditional(function(utils)
+--         local project_local_bin = "node_modules/.bin/prettier"
+
+--         return null_ls.builtins.formatting.prettier.with({
+--           command = utils.root_has_file(project_local_bin) and project_local_bin or "prettier",
+--           filetypes = { "html", "json", "yaml", "markdown", "css", "scss", "typescript", "typescriptreact", "javascript", "javascriptreact" },
+--         })
+--       end)
+
+--       null_ls.config({
+--         sources = { prettier },
+--         debug = true
+--       })
+--       local nvim_lsp = require("lspconfig")
+--       nvim_lsp["null-ls"].setup({})
+--     end
+--   }
   use {
     "neovim/nvim-lspconfig",
     config = function()
@@ -292,7 +317,6 @@ return require("packer").startup(function()
         buf_map(bufnr, "n", "gl", ":lua vim.lsp.buf.implementation()<CR>", opts)
 
         if client.resolved_capabilities.document_formatting then
-          -- TODO doesnt seem to work?
           vim.api.nvim_exec([[
            augroup LspAutocommands
              autocmd! * <buffer>
@@ -325,7 +349,7 @@ return require("packer").startup(function()
       })
 
       -- Diagnostic display settings
-      local signs = { Error = " ", Warning = " ", Hint = " ", Information = " " }
+      local signs = { Error = " ", Warning = " ", Hint = "", Information = " " }
       for type, icon in pairs(signs) do
          local hl = "LspDiagnosticsSign" .. type
          vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
@@ -336,14 +360,17 @@ return require("packer").startup(function()
         underline = true,
         update_in_insert = false
       })
-      vim.o.updatetime = 250
+      vim.o.updatetime = 750
       vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.lsp.diagnostic.show_line_diagnostics({focusable=false})]]
 
       -- TODO add CSS lsp
 
       -- Linting and Formatting
       nvim_lsp.diagnosticls.setup {
-        on_attach = on_attach,
+        on_attach = function(client)
+          client.resolved_capabilities.document_formatting = true
+          on_attach(client)
+        end,
         filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
         init_options = {
           linters = {
@@ -369,7 +396,7 @@ return require("packer").startup(function()
             prettier = {
               command = "prettier",
               rootPatterns = {".prettierrc.js", ".prettierrc", "package.json"},
-              args = {"--stdin-filepath", "--write", "%filepath"}
+              args = {"--stdin-filepath", "%filepath"}
             }
           },
           filetypes = {

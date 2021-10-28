@@ -30,6 +30,10 @@ source $ZSH/oh-my-zsh.sh
 alias {vim,vi,im}="nvim"
 alias zshrc="nvim ~/dotfiles/.zshrc"
 
+gch() {
+  git checkout $1 2>/dev/null || git checkout -b $1;
+}
+
 # function to check what process is listening on a port
 listening() {
   if [ $# -eq 0 ]; then
