@@ -1,6 +1,3 @@
--- TODO
--- prettier auto format
-
 --
 -- options
 --
@@ -94,9 +91,6 @@ return require("packer").startup(function()
       require('nvim-web-devicons').setup({ default = true })
     end
   }
-  -- use "yuezk/vim-js"
-  -- use "maxmellon/vim-jsx-pretty"
-  -- use "HerringtonDarkholme/yats.vim"
   use {
     "nvim-treesitter/nvim-treesitter",
     run = ":TSUpdate",
@@ -172,9 +166,9 @@ return require("packer").startup(function()
       vim.g.nvim_tree_special_files = {}
       vim.g.nvim_tree_show_icons = {
 				git = 0,
-					folders = 0,
-	files = 0,
-	folder_arrows = 0,
+        folders = 0,
+        files = 0,
+        folder_arrows = 0,
       }
     end,
     config = function()
@@ -247,11 +241,15 @@ return require("packer").startup(function()
       local km = vim.api.nvim_set_keymap
       local opts = { noremap = true, silent = true }
       km("n", "<C-P>", "<cmd>lua require('fzf-lua').files({ cmd = \"rg --files --hidden --color=never -g '!.git/**'\"})<CR>", opts)
-      km("n", "<Leader>g", "<cmd>lua require('fzf-lua').live_grep()<CR>", opts)
+      km("n", "<Leader>g", "<cmd>lua require('fzf-lua').grep_visual()<CR>", opts)
+      km("n", "<Leader>t", "<cmd>lua require('fzf-lua').lsp_typedefs()<CR>", opts)
       km("n", ";", "<cmd>lua require('fzf-lua').buffers()<CR>", opts)
     end,
     config = function()
       require('fzf-lua').setup({
+        preview = {
+          layout = 'vertical'
+        },
         buffers = {
           git_icons = false
         },
@@ -274,30 +272,6 @@ return require("packer").startup(function()
     "ms-jpq/coq_nvim",
     branch = "coq"
   }
---   use {
---     "jose-elias-alvarez/null-ls.nvim",
---     after = "nvim-lspconfig",
---     config = function()
---       local null_ls = require("null-ls")
-
---       -- you don't have to use these helpers and could do it yourself, too
---       local prettier = require("null-ls.helpers").conditional(function(utils)
---         local project_local_bin = "node_modules/.bin/prettier"
-
---         return null_ls.builtins.formatting.prettier.with({
---           command = utils.root_has_file(project_local_bin) and project_local_bin or "prettier",
---           filetypes = { "html", "json", "yaml", "markdown", "css", "scss", "typescript", "typescriptreact", "javascript", "javascriptreact" },
---         })
---       end)
-
---       null_ls.config({
---         sources = { prettier },
---         debug = true
---       })
---       local nvim_lsp = require("lspconfig")
---       nvim_lsp["null-ls"].setup({})
---     end
---   }
   use {
     "neovim/nvim-lspconfig",
     config = function()
