@@ -80,8 +80,11 @@ return require("packer").startup(function()
   use {
     "navarasu/onedark.nvim",
     config = function()
-      vim.g.onedark_darker_diagnostics = false
-      require('onedark').setup()
+      require('onedark').setup({
+        diagnostics = {
+          darker = false
+        }
+      })
       vim.cmd[[colorscheme onedark]]
     end
   }
@@ -133,8 +136,10 @@ return require("packer").startup(function()
         tabline = {
           lualine_a = {"buffers"},
           lualine_x = {
-            "diagnostics",
-            sources = {"nvim_lsp"}
+            {
+              "diagnostics",
+              sources = {"nvim_lsp"}
+            }
           }
         }
       })
@@ -159,23 +164,37 @@ return require("packer").startup(function()
     setup = function()
       local km = vim.api.nvim_set_keymap
       km("n", "<C-n>", ":NvimTreeToggle<CR>", { noremap = true })
-      vim.g.nvim_tree_ignore = { '.git', 'node_modules', '.cache' }
-      vim.g.nvim_tree_gitignore = 0
-      vim.g.nvim_tree_quit_on_open = 1
-      vim.g.nvim_tree_indent_markers = 1
-      vim.g.nvim_tree_special_files = {}
-      vim.g.nvim_tree_show_icons = {
-				git = 0,
-        folders = 0,
-        files = 0,
-        folder_arrows = 0,
-      }
     end,
     config = function()
       require("nvim-tree").setup({
-        auto_close = false,
+        actions = {
+          open_file = {
+            quit_on_open = true
+          }
+        },
+        renderer = {
+          icons = {
+            show = {
+              git = false,
+              folder = false,
+              file = false,
+              folder_arrow = false
+            }
+          },
+          indent_markers = {
+            enable = true
+          },
+          special_files = {}
+        },
         diagnostics = {
           enable = false
+        },
+        git = {
+          ignore = false
+        },
+        filters = {
+          dotfiles = false,
+          custom = { "node_modules" }
         }
       })
     end
@@ -241,15 +260,12 @@ return require("packer").startup(function()
       local km = vim.api.nvim_set_keymap
       local opts = { noremap = true, silent = true }
       km("n", "<C-P>", "<cmd>lua require('fzf-lua').files({ cmd = \"rg --files --hidden --color=never -g '!.git/**'\"})<CR>", opts)
-      km("n", "<Leader>g", "<cmd>lua require('fzf-lua').grep_visual()<CR>", opts)
-      km("n", "<Leader>t", "<cmd>lua require('fzf-lua').lsp_typedefs()<CR>", opts)
+      km("n", "<Leader>g", "<cmd>lua require('fzf-lua').live_grep()<CR>", opts)
+      km("n", "<Leader>t", "<cmd>lua require('fzf-lua').lsp_definitions()<CR>", opts)
       km("n", ";", "<cmd>lua require('fzf-lua').buffers()<CR>", opts)
     end,
     config = function()
       require('fzf-lua').setup({
-        preview = {
-          layout = 'vertical'
-        },
         buffers = {
           git_icons = false
         },
@@ -278,6 +294,7 @@ return require("packer").startup(function()
       local nvim_lsp = require("lspconfig")
 
       local on_attach = function(client, bufnr)
+        bufnr = bufnr or 0
         local buf_map = vim.api.nvim_buf_set_keymap
         local opts = { silent = true }
         vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
@@ -286,7 +303,7 @@ return require("packer").startup(function()
         buf_map(bufnr, "n", "gd", ":lua vim.lsp.buf.definition()<CR>", opts)
         buf_map(bufnr, "n", "gR", ":lua vim.lsp.buf.references()<CR>", opts)
         buf_map(bufnr, "n", "K", ":lua vim.lsp.buf.hover()<CR>", opts)
-        buf_map(bufnr, "n", "<Leader>a", ":lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
+        buf_map(bufnr, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", opts)
         buf_map(bufnr, "n", "gf", ":lua vim.lsp.buf.formatting()<CR>", opts)
         buf_map(bufnr, "n", "gl", ":lua vim.lsp.buf.implementation()<CR>", opts)
 
@@ -300,19 +317,17 @@ return require("packer").startup(function()
         end
       end
 
-      -- do formatting async for improved performance
-      local format_async = function(err, _, result, _, bufnr)
+      vim.lsp.handlers["textDocument/formatting"] = function(err, result, ctx)
         if err ~= nil or result == nil then return end
         if not vim.api.nvim_buf_get_option(bufnr, "modified") then
           local view = vim.fn.winsaveview()
-          vim.lsp.util.apply_text_edits(result, bufnr)
+          vim.lsp.util.apply_text_edits(result, ctx.bufnr)
           vim.fn.winrestview(view)
-          if bufnr == vim.api.nvim_get_current_buf() then
+          if ctx.bufnr == vim.api.nvim_get_current_buf() then
             vim.api.nvim_command("noautocmd :update")
           end
         end
       end
-      vim.lsp.handlers["textDocument/formatting"] = format_async
 
       -- Typescript lang server
       nvim_lsp.tsserver.setup({
@@ -322,10 +337,30 @@ return require("packer").startup(function()
         end
       })
 
+      -- Deno lang server
+      nvim_lsp.denols.setup({
+        on_attach = function(client)
+          client.resolved_capabilities.document_formatting = false
+          on_attach(client)
+        end,
+        autostart = false,
+        init_options = {
+          unstable = true
+        }
+      })
+
+      -- Python lang server
+      nvim_lsp.pyright.setup{
+        on_attach = function(client)
+          client.resolved_capabilities.document_formatting = false
+          on_attach(client)
+        end
+      }
+
       -- Diagnostic display settings
       local signs = { Error = " ", Warning = " ", Hint = "", Information = " " }
       for type, icon in pairs(signs) do
-         local hl = "LspDiagnosticsSign" .. type
+         local hl = "DiagnosticsSign" .. type
          vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
       end
       vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -335,7 +370,7 @@ return require("packer").startup(function()
         update_in_insert = false
       })
       vim.o.updatetime = 750
-      vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.lsp.diagnostic.show_line_diagnostics({focusable=false})]]
+      vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float({focusable=false})]]
 
       -- TODO add CSS lsp
 
@@ -371,6 +406,7 @@ return require("packer").startup(function()
               command = "prettier",
               rootPatterns = {".prettierrc.js", ".prettierrc", "package.json"},
               args = {"--stdin-filepath", "%filepath"}
+              -- args = {"--find-config-path", "%filepath", "&&", "--stdin-filepath", "%filepath"}
             }
           },
           filetypes = {

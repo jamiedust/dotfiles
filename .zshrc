@@ -12,11 +12,13 @@ plugins=(
   github
   docker
   brew
-  osx
+  macos
   zsh-autosuggestions
+  dotenv
 )
 
-export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$PATH
+export PATH=$PATH:$HOME/Library/Python/3.9/bin
 
 # Disable create-react-app auto launch
 export BROWSER=none
