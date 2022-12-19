@@ -289,6 +289,10 @@ return require("packer").startup(function()
     branch = "coq"
   }
   use {
+    "ms-jpq/coq.artifacts",
+    branch = "artifacts"
+  }
+  use {
     "neovim/nvim-lspconfig",
     config = function()
       local nvim_lsp = require("lspconfig")
@@ -319,9 +323,9 @@ return require("packer").startup(function()
 
       vim.lsp.handlers["textDocument/formatting"] = function(err, result, ctx)
         if err ~= nil or result == nil then return end
-        if not vim.api.nvim_buf_get_option(bufnr, "modified") then
+        if not vim.api.nvim_buf_get_option(ctx.bufnr, "modified") then
           local view = vim.fn.winsaveview()
-          vim.lsp.util.apply_text_edits(result, ctx.bufnr)
+          vim.lsp.util.apply_text_edits(result, ctx.bufnr, "utf-8")
           vim.fn.winrestview(view)
           if ctx.bufnr == vim.api.nvim_get_current_buf() then
             vim.api.nvim_command("noautocmd :update")
@@ -404,7 +408,8 @@ return require("packer").startup(function()
           formatters = {
             prettier = {
               command = "prettier",
-              rootPatterns = {".prettierrc.js", ".prettierrc", "package.json"},
+              rootPatterns = {".prettierrc.js", ".prettierrc", ".prettierrc.json"},
+              requiredFiles = {".prettierrc.js", ".prettierrc", ".prettierrc.json"},
               args = {"--stdin-filepath", "%filepath"}
               -- args = {"--find-config-path", "%filepath", "&&", "--stdin-filepath", "%filepath"}
             }

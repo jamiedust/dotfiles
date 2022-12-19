@@ -14,11 +14,12 @@ plugins=(
   brew
   macos
   zsh-autosuggestions
-  dotenv
 )
 
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$PATH
 export PATH=$PATH:$HOME/Library/Python/3.9/bin
+
+source ~/vars.sh
 
 # Disable create-react-app auto launch
 export BROWSER=none
@@ -31,6 +32,8 @@ source $ZSH/oh-my-zsh.sh
 
 alias {vim,vi,im}="nvim"
 alias zshrc="nvim ~/dotfiles/.zshrc"
+alias python="python3"
+alias pip="python3 -m pip"
 
 gch() {
   git checkout $1 2>/dev/null || git checkout -b $1;
