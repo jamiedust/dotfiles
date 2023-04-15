@@ -17,12 +17,10 @@ plugins=(
 )
 
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$PATH
-export PATH=$PATH:$HOME/Library/Python/3.9/bin
+export PATH=$PATH:$HOME/Library/Python/3.11/bin
+export PATH=/opt/homebrew/opt/openjdk@11/bin:$PATH
 
 source ~/vars.sh
-
-# Disable create-react-app auto launch
-export BROWSER=none
 
 # https://github.com/Schniz/fnm
 eval "$(fnm env)"
@@ -32,8 +30,8 @@ source $ZSH/oh-my-zsh.sh
 
 alias {vim,vi,im}="nvim"
 alias zshrc="nvim ~/dotfiles/.zshrc"
-alias python="python3"
-alias pip="python3 -m pip"
+alias python="python3.11"
+alias pip="python3.11 -m pip"
 
 gch() {
   git checkout $1 2>/dev/null || git checkout -b $1;
