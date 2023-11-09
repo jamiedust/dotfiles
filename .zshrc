@@ -19,6 +19,7 @@ plugins=(
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$PATH
 export PATH=$PATH:$HOME/Library/Python/3.11/bin
 export PATH=/opt/homebrew/opt/openjdk@11/bin:$PATH
+export PATH=$HOME/go/bin:$PATH
 
 source ~/vars.sh
 

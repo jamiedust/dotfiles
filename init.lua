@@ -260,6 +260,7 @@ lazy.setup({
           "package.json",
           "Pipfile",
           "requirements.txt",
+          "go.mod",
           ".git"
         ),
         sources = {
@@ -274,6 +275,8 @@ lazy.setup({
           null_ls.builtins.diagnostics.mypy,
           null_ls.builtins.formatting.autopep8,
           null_ls.builtins.formatting.autoflake,
+          -- go
+          -- null_ls.builtins.diagnostics.revive
           -- misc
           -- null_ls.builtins.diagnostics.actionlint,
           -- null_ls.builtins.diagnostics.cfn_lint,
@@ -314,7 +317,13 @@ lazy.setup({
           local cmp = require("cmp")
           return {
             sources = {
-              { name = "nvim_lsp" }
+              { name = "nvim_lsp" },
+              { name = 'vsnip' }
+            },
+            snippet = {
+              expand = function(args)
+                vim.fn["vsnip#anonymous"](args.body)
+              end,
             },
             mapping = {
               ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
@@ -326,8 +335,10 @@ lazy.setup({
           }
         end
       },
+      "hrsh7th/cmp-vsnip",
+      "hrsh7th/vim-vsnip",
       "hrsh7th/cmp-nvim-lsp",
-      "mfussenegger/nvim-dap"
+      "mfussenegger/nvim-dap",
     },
     opts = {
       diagnostics = {
@@ -339,7 +350,8 @@ lazy.setup({
       },
       servers = {
         "tsserver",
-        "pyright"
+        "pyright",
+        "gopls"
       },
       signs = { Error = " ", Warn = " ", Hint = "", Info = " " }
     },
