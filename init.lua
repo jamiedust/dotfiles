@@ -235,7 +235,7 @@ lazy.setup({
     end
   },
   {
-    "nvim-telescope/telescope.nvim", tag = "0.1.1",
+    "nvim-telescope/telescope.nvim", tag = "0.1.4",
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = {
       { "<C-P>",     ":Telescope find_files<CR>" },
@@ -250,8 +250,10 @@ lazy.setup({
     opts = {}
   },
   {
+    -- "nvimtools/none-ls.nvim",
     "jose-elias-alvarez/null-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
+    debug = true,
     opts = function()
       local null_ls = require("null-ls")
       return {
@@ -260,21 +262,17 @@ lazy.setup({
           "package.json",
           "Pipfile",
           "requirements.txt",
-          "go.mod",
-          ".git"
+          "go.mod"
         ),
         sources = {
           -- js
-          null_ls.builtins.diagnostics.tsc,
+          -- null_ls.builtins.diagnostics.tsc,
           null_ls.builtins.diagnostics.eslint_d,
           null_ls.builtins.code_actions.eslint_d,
           null_ls.builtins.formatting.eslint_d,
           null_ls.builtins.formatting.prettierd,
           -- python
-          null_ls.builtins.diagnostics.flake8,
           null_ls.builtins.diagnostics.mypy,
-          null_ls.builtins.formatting.autopep8,
-          null_ls.builtins.formatting.autoflake,
           -- go
           -- null_ls.builtins.diagnostics.revive
           -- misc
@@ -348,11 +346,11 @@ lazy.setup({
         virtual_text = false, -- { spacing = 4, prefix = "●" },
         severity_sort = true
       },
-      servers = {
-        "tsserver",
-        "pyright",
-        "gopls"
-      },
+      -- servers = {
+      --   "ts_ls",
+      --   "pyright",
+      --   "gopls"
+      -- },
       signs = { Error = " ", Warn = " ", Hint = "", Info = " " }
     },
     config = function(_, opts)
@@ -363,24 +361,77 @@ lazy.setup({
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
       end
+
       vim.diagnostic.config(opts.diagnostics)
       vim.o.updatetime = 750
+
       vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
         callback = function()
           vim.diagnostic.open_float({ focusable=false })
         end
       })
 
+      -- eslint
+      -- require("lspconfig")["eslint"].setup({
+      --   capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+      --   cmd = { "vscode-eslint-language-server", "--stdio" },
+      --   on_attach = function(client, buff)
+      --     vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
+      --     vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
+      --     -- client.resolved_capabilities.document_formatting = true
+      --     client.server_capabilities.documentFormattingProvider = true
+      --     vim.api.nvim_create_autocmd("BufWritePre", {
+      --       buffer = bufnr,
+      --       command = "EslintFixAll"
+      --     })
+      --   end
+      -- })
+
+      -- ts_ls
+      require("lspconfig")["ts_ls"].setup({
+        capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+        on_attach = function(client, buff)
+          vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
+          vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
+        end
+      })
+
+      -- pyright
+      require("lspconfig")["pyright"].setup({
+        capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+        on_attach = function(client, buff)
+          vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
+          vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
+        end
+      })
+
       -- setup servers
-      for k, server in pairs(opts.servers) do
-        require("lspconfig")[server].setup({
-          capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
-          on_attach = function(client, buff)
-            vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
-            vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
-          end
-        })
-      end
+      -- require("lspconfig")["java_language_server"].setup({
+      --   cmd = { "/Users/jamiewoolgar/dev/tools/java-language-server/dist/lang_server_mac.sh" },
+      --   capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+      --   on_attach = function(client, buff)
+      --     vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
+      --     vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
+      --   end
+      -- })
+      -- for k, server in pairs(opts.servers) do
+      --   require("lspconfig")[server].setup({
+      --     capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+      --     -- cmd = { "vscode-eslint-language-server", "--stdio" },
+      --     on_attach = function(client, buff)
+      --       vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
+      --       vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
+      --       if server == "eslint" then
+      --         -- client.resolved_capabilities.document_formatting = true
+      --         client.server_capabilities.documentFormattingProvider = true
+      --         vim.api.nvim_create_autocmd("BufWritePre", {
+      --           buffer = bufnr,
+      --           command = "EslintFixAll"
+      --         })
+      --       end
+      --     end
+      --   })
+      -- end
     end
   }
 }, lazyopts)
