@@ -11,6 +11,8 @@ cursor-style-blink = false
 cursor-click-to-move = true
 shell-integration-features = no-cursor
 
+mouse-hide-while-typing = true
+
 macos-titlebar-style = tabs
 
 window-inherit-working-directory = true
