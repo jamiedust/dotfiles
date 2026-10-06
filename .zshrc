@@ -35,8 +35,9 @@ alias zshrc="nvim ~/dotfiles/.zshrc"
 alias vimrc="nvim ~/dotfiles/init.lua"
 alias ttyrc="nvim ~/dotfiles/ghostty-config"
 
-alias python="python3.11"
-alias pip="python3.11 -m pip"
+alias python="python3"
+alias py="python3"
+alias pip="python3 -m pip"
 
 gch() {
   git checkout $1 2>/dev/null || git checkout -b $1;
@@ -54,4 +55,17 @@ listening() {
 # Decode JWT
 jwtd() {
   jq -R 'split(".") |.[0:2] | map(@base64d) | map(fromjson)' <<< $1
+}
+
+# Detailed timings from a network request
+curl_time() {
+    curl -so /dev/null -w "\
+   namelookup:  %{time_namelookup}s\n\
+      connect:  %{time_connect}s\n\
+   appconnect:  %{time_appconnect}s\n\
+  pretransfer:  %{time_pretransfer}s\n\
+     redirect:  %{time_redirect}s\n\
+starttransfer:  %{time_starttransfer}s\n\
+-------------------------\n\
+        total:  %{time_total}s\n" "$@"
 }
