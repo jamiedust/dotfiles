@@ -21,6 +21,7 @@ plugins=(
 
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$PATH
 export PATH=$HOME/dev/scripts:$PATH
+export PATH=/opt/homebrew/opt/postgresql@18/bin:$PATH
 export PATH=$HOME/go/bin:$PATH
 
 export EDITOR=nvim
@@ -71,4 +72,8 @@ curl_time() {
 starttransfer:  %{time_starttransfer}s\n\
 -------------------------\n\
         total:  %{time_total}s\n" "$@"
+}
+
+get_ip() {
+  curl --silent ipinfo.io/ip | awk '{print $0"/32"}' | pbcopy && printf "IP address with /32 CIDR notation copied to clipboard: " && curl --silent ipinfo.io/ip | awk '{print $0"/32"}'
 }
