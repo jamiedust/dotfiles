@@ -9,7 +9,7 @@ plugins=(
   git
   colored-man-pages
   colorize
-  github
+  gh
   docker
   brew
   macos
@@ -27,16 +27,17 @@ export PATH=$HOME/go/bin:$PATH
 export EDITOR=nvim
 
 # https://github.com/Schniz/fnm
-eval "$(fnm env)"
+eval "$(fnm env --use-on-cd)" # --version-file-strategy=recursive
 
 # https://github.com/junegunn/fzf#setting-up-shell-integration
 source <(fzf --zsh)
 
-alias {vim,vi,im}="nvim"
+alias {vim,vi,im,vom}="nvim"
 alias zshrc="nvim ~/dotfiles/.zshrc"
-alias vimrc="nvim ~/dotfiles/init.lua"
+alias vimrc="nvim ~/dotfiles/nvim/init.lua"
 alias ttyrc="nvim ~/dotfiles/ghostty-config"
-alias notes="cd /Users/jamiewoolgar/Library/Mobile\\ Documents/iCloud\~md\~obsidian/Documents/Obsidian && nvim"
+alias clauderc="nvim ~/dotfiles/claude/settings.json"
+alias notes="cd ~/Library/Mobile\\ Documents/iCloud\~md\~obsidian/Documents/Obsidian && nvim"
 
 alias python="python3"
 alias pip="python3 -m pip"
@@ -74,6 +75,9 @@ starttransfer:  %{time_starttransfer}s\n\
         total:  %{time_total}s\n" "$@"
 }
 
+# Get IP address
 get_ip() {
-  curl --silent ipinfo.io/ip | awk '{print $0"/32"}' | pbcopy && printf "IP address with /32 CIDR notation copied to clipboard: " && curl --silent ipinfo.io/ip | awk '{print $0"/32"}'
+  local ip="$(curl --silent ipinfo.io/ip)/32"
+  printf '%s' "$ip" | pbcopy
+  echo "$ip"
 }

@@ -17,6 +17,11 @@ macos-titlebar-style = tabs
 
 window-inherit-working-directory = true
 
+keybind = cmd+shift+h=resize_split:left,10
+keybind = cmd+shift+j=resize_split:down,10
+keybind = cmd+shift+k=resize_split:up,10
+keybind = cmd+shift+l=resize_split:right,10
+
 # modified onedark theme
 palette = 0=#1e2127
 palette = 1=#e06c75
