@@ -22,6 +22,8 @@ export PATH=/opt/homebrew/opt/openjdk@11/bin:$PATH
 export PATH=$HOME/dev/scripts:$PATH
 export PATH=$HOME/go/bin:$PATH
 
+export EDITOR=nvim
+
 source ~/vars.sh
 
 # https://github.com/Schniz/fnm
@@ -34,6 +36,7 @@ alias {vim,vi,im}="nvim"
 alias zshrc="nvim ~/dotfiles/.zshrc"
 alias vimrc="nvim ~/dotfiles/init.lua"
 alias ttyrc="nvim ~/dotfiles/ghostty-config"
+alias notes="cd /Users/jamiewoolgar/Library/Mobile\\ Documents/iCloud\~md\~obsidian/Documents/Obsidian && nvim"
 
 alias python="python3"
 alias py="python3"

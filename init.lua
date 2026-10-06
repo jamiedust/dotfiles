@@ -56,7 +56,8 @@ end
 vim.api.nvim_set_keymap("n", "<Esc>", ":noh<Return><Esc>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<C-d>", ":%bd|e#|bd#<CR>", {})
 vim.api.nvim_set_keymap("n", "<Leader>i", ":e ~/dotfiles/init.lua<Return>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<Leader>s", ":e ~/Desktop/scratchpad.md<Return>", {})
+vim.api.nvim_set_keymap("n", "<Leader>s", ":e ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/scratchpad.md<Return>", {})
+vim.api.nvim_set_keymap("n", "<Leader>n", ':Telescope find_files search_dirs={"~/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents/Obsidian"}<Return>', {})
 
 -- custom filetypes
 vim.filetype.add({
@@ -253,6 +254,7 @@ lazy.setup({
   },
   {
     "nvim-telescope/telescope.nvim", tag = "0.1.4",
+    lazy = false,
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = {
       { "<C-P>",     ":Telescope find_files<CR>" },
@@ -287,7 +289,7 @@ lazy.setup({
     "mhartington/formatter.nvim",
     config = function()
       require("formatter").setup({
-        logging = true,
+        logging = false,
         log_level = vim.log.levels.WARN,
         filetype = {
           javascript = {
@@ -404,5 +406,31 @@ lazy.setup({
       })
       vim.lsp.enable("gopls")
     end
-  }
+  },
+  -- {
+  --   "NickvanDyke/opencode.nvim",
+  --   dependencies = {
+  --     -- Recommended for `ask()` and `select()`.
+  --     ---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
+  --     { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
+  --   },
+  --   config = function()
+  --     ---@type opencode.Opts
+  --     vim.g.opencode_opts = {
+  --       -- Your configuration, if any — see `lua/opencode/config.lua`, or "goto definition".
+  --     }
+  --
+  --     -- Required for `opts.events.reload`.
+  --     vim.o.autoread = true
+  --
+  --     -- Recommended/example keymaps.
+  --     vim.keymap.set({ "n", "x" }, "<C-a>", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode" })
+  --     vim.keymap.set({ "n", "x" }, "<C-x>", function() require("opencode").select() end,                          { desc = "Execute opencode action…" })
+  --     vim.keymap.set({ "n", "x" },    "ga", function() require("opencode").prompt("@this") end,                   { desc = "Add to opencode" })
+  --     vim.keymap.set({ "n", "t" }, "<C-.>", function() require("opencode").toggle() end,                          { desc = "Toggle opencode" })
+  --     -- You may want these if you stick with the opinionated "<C-a>" and "<C-x>" above — otherwise consider "<leader>o".
+  --     vim.keymap.set('n', '+', '<C-a>', { desc = 'Increment', noremap = true })
+  --     vim.keymap.set('n', '-', '<C-x>', { desc = 'Decrement', noremap = true })
+  --   end,
+  -- },
 }, lazyopts)
