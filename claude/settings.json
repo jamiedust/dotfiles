@@ -1,0 +1,16 @@
+{
+  "env": {
+    "ENABLE_LSP_TOOL": "1",
+    "CLAUDE_AFK_TIMEOUT_MS": "86400000"
+  },
+  "enabledPlugins": {
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "sandbox": {
+    "enabled": true,
+    "allowUnsandboxedCommands": false
+  },
+  "autoUpdatesChannel": "stable",
+  "theme": "dark-ansi",
+  "awaySummaryEnabled": false
+}
