@@ -111,7 +111,11 @@ lazy.setup({
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
     config = function()
-      require("nvim-treesitter.configs").setup({
+      require("nvim-treesitter.config").setup({
+        ensure_installed = {
+          "bash", "python", "go", "comment", "lua", "markdown", "css",
+          "markdown_inline", "javascript", "typescript", "tsx"
+        },
         highlight = {
           enable = true
         },
@@ -253,7 +257,7 @@ lazy.setup({
     end
   },
   {
-    "nvim-telescope/telescope.nvim", tag = "0.1.4",
+    "nvim-telescope/telescope.nvim", branch = "master",
     lazy = false,
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = {

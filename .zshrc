@@ -13,24 +13,23 @@ plugins=(
   docker
   brew
   macos
-  zsh-autosuggestions
 )
 
+[ -f $ZSH/oh-my-zsh.sh ] && source $ZSH/oh-my-zsh.sh
+
+[ -f ~/vars.sh ] && source ~/vars.sh
+
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:$PATH
-export PATH=$PATH:$HOME/Library/Python/3.11/bin
-export PATH=/opt/homebrew/opt/openjdk@11/bin:$PATH
 export PATH=$HOME/dev/scripts:$PATH
 export PATH=$HOME/go/bin:$PATH
 
 export EDITOR=nvim
 
-source ~/vars.sh
-
 # https://github.com/Schniz/fnm
 eval "$(fnm env)"
 
-source $ZSH/oh-my-zsh.sh
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# https://github.com/junegunn/fzf#setting-up-shell-integration
+source <(fzf --zsh)
 
 alias {vim,vi,im}="nvim"
 alias zshrc="nvim ~/dotfiles/.zshrc"
@@ -39,9 +38,10 @@ alias ttyrc="nvim ~/dotfiles/ghostty-config"
 alias notes="cd /Users/jamiewoolgar/Library/Mobile\\ Documents/iCloud\~md\~obsidian/Documents/Obsidian && nvim"
 
 alias python="python3"
-alias py="python3"
 alias pip="python3 -m pip"
 
+
+# Checkout or create new branch
 gch() {
   git checkout $1 2>/dev/null || git checkout -b $1;
 }
@@ -55,12 +55,12 @@ listening() {
   fi
 }
 
-# Decode JWT
+# Decode JWT payload
 jwtd() {
   jq -R 'split(".") |.[0:2] | map(@base64d) | map(fromjson)' <<< $1
 }
 
-# Detailed timings from a network request
+# Time a network request
 curl_time() {
     curl -so /dev/null -w "\
    namelookup:  %{time_namelookup}s\n\
