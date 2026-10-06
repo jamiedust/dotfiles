@@ -58,6 +58,13 @@ vim.api.nvim_set_keymap("n", "<C-d>", ":%bd|e#|bd#<CR>", {})
 vim.api.nvim_set_keymap("n", "<Leader>i", ":e ~/dotfiles/init.lua<Return>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<Leader>s", ":e ~/Desktop/scratchpad.md<Return>", {})
 
+-- custom filetypes
+vim.filetype.add({
+  pattern = {
+    [".*/.github/workflows/.*%.yml"] = "yaml.ghaction"
+  }
+})
+
 -- Init Lazy.nvim package manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
@@ -102,16 +109,15 @@ lazy.setup({
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
-    opts = {
-      highlight = {
-        enable = true
-      },
-      indent = {
-        enable = true
-      }
-    },
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        highlight = {
+          enable = true
+        },
+        indent = {
+          enable = true
+        }
+      })
     end
   },
   {
@@ -123,12 +129,12 @@ lazy.setup({
       },
       sections = {
         lualine_a = {"mode"},
-        lualine_b = {"branch"},
+        lualine_b = {"branch", "diff"},
         lualine_c = {
           {
             "filename",
             file_status = true,
-            full_path = true
+            path = 3
           }
         },
         lualine_x = {"encoding", "fileformat"},
@@ -140,7 +146,8 @@ lazy.setup({
         lualine_x = {
           {
             "diagnostics",
-            sources = {"nvim_lsp"}
+            sources = {"nvim_lsp", "nvim_diagnostic"},
+            update_in_insert = true
           }
         }
       }
@@ -162,7 +169,8 @@ lazy.setup({
   {
     "kyazdani42/nvim-tree.lua",
     keys = {
-      { "<C-n>", ":NvimTreeToggle<CR>", noremap = true }
+      { "<C-n>", ":NvimTreeToggle<CR>", noremap = true },
+      { "<C-f>", ":NvimTreeFindFile<CR>", noremap = true }
     },
     opts = {
       actions = {
@@ -235,6 +243,15 @@ lazy.setup({
     end
   },
   {
+    "nvim-pack/nvim-spectre",
+    keys = {
+       {"<Leader>q", "<cmd>lua require('spectre').toggle()<cr>", mode={"n"}},
+    },
+    config = function()
+       require("spectre").setup({ is_block_ui_break = true })
+    end
+  },
+  {
     "nvim-telescope/telescope.nvim", tag = "0.1.4",
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = {
@@ -250,59 +267,51 @@ lazy.setup({
     opts = {}
   },
   {
-    -- "nvimtools/none-ls.nvim",
-    "jose-elias-alvarez/null-ls.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    debug = true,
-    opts = function()
-      local null_ls = require("null-ls")
-      return {
-        debug = true,
-        root_dir = require("null-ls.utils").root_pattern(
-          "package.json",
-          "Pipfile",
-          "requirements.txt",
-          "go.mod"
-        ),
-        sources = {
-          -- js
-          -- null_ls.builtins.diagnostics.tsc,
-          null_ls.builtins.diagnostics.eslint_d,
-          null_ls.builtins.code_actions.eslint_d,
-          null_ls.builtins.formatting.eslint_d,
-          null_ls.builtins.formatting.prettierd,
-          -- python
-          null_ls.builtins.diagnostics.mypy,
-          -- go
-          -- null_ls.builtins.diagnostics.revive
-          -- misc
-          -- null_ls.builtins.diagnostics.actionlint,
-          -- null_ls.builtins.diagnostics.cfn_lint,
-          -- null_ls.builtins.diagnostics.shellcheck,
-          -- null_ls.builtins.diagnostics.stylelint,
-          -- null_ls.builtins.diagnostics.terraform_validate,
-          -- null_ls.builtins.diagnostics.yamllint
-        },
-        on_attach = function(client, bufnr)
-          local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-          if client.supports_method("textDocument/formatting") then
-            vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-            vim.api.nvim_create_autocmd("BufWritePre", {
-              group = augroup,
-              buffer = bufnr,
-              callback = function()
-                vim.lsp.buf.format({
-                  filter = function(client)
-                    -- only format with null-ls
-                    return client.name == "null-ls"
-                  end,
-                  bufnr = bufnr
-                })
-              end
-            })
-          end
-        end
+    "mfussenegger/nvim-lint",
+    config = function()
+      require("lint").linters_by_ft = {
+        -- ghaction = {"actionlint"},
+        -- go = {"revive"},
+        typescript = {"eslint"},
+        javascript = {"eslint"},
+        python = {"mypy"}
       }
+      vim.api.nvim_create_autocmd({ "InsertLeave", "BufWritePost" }, {
+        callback = function()
+          require("lint").try_lint(nil, { ignore_errors = true })
+        end
+      })
+    end
+  },
+  {
+    "mhartington/formatter.nvim",
+    config = function()
+      require("formatter").setup({
+        logging = true,
+        log_level = vim.log.levels.WARN,
+        filetype = {
+          javascript = {
+            require("formatter.filetypes.javascript").prettierd,
+            require("formatter.filetypes.javascript").eslint_d
+          },
+          typescript = {
+            require("formatter.filetypes.typescript").prettierd,
+            require("formatter.filetypes.typescript").eslint_d
+          },
+          python = {
+            require("formatter.filetypes.python").autopep8
+          },
+          ["*"] = {
+            require("formatter.filetypes.any").remove_trailing_whitespace
+          }
+        }
+      })
+
+      vim.api.nvim_create_augroup("__formatter__", { clear = true })
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        group = "__formatter__",
+        command = ":FormatWrite",
+      })
     end
   },
   {
@@ -346,17 +355,11 @@ lazy.setup({
         virtual_text = false, -- { spacing = 4, prefix = "●" },
         severity_sort = true
       },
-      -- servers = {
-      --   "ts_ls",
-      --   "pyright",
-      --   "gopls"
-      -- },
       signs = { Error = " ", Warn = " ", Hint = "", Info = " " }
     },
     config = function(_, opts)
       -- TODO setup DAP
 
-      -- diagnostic config
       for type, icon in pairs(opts.signs) do
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
@@ -371,67 +374,35 @@ lazy.setup({
         end
       })
 
-      -- eslint
-      -- require("lspconfig")["eslint"].setup({
-      --   capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
-      --   cmd = { "vscode-eslint-language-server", "--stdio" },
-      --   on_attach = function(client, buff)
-      --     vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
-      --     vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
-      --     -- client.resolved_capabilities.document_formatting = true
-      --     client.server_capabilities.documentFormattingProvider = true
-      --     vim.api.nvim_create_autocmd("BufWritePre", {
-      --       buffer = bufnr,
-      --       command = "EslintFixAll"
-      --     })
-      --   end
-      -- })
-
       -- ts_ls
-      require("lspconfig")["ts_ls"].setup({
+      vim.lsp.config("ts_ls", {
         capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
         on_attach = function(client, buff)
           vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
           vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
         end
       })
+      vim.lsp.enable("ts_ls")
 
       -- pyright
-      require("lspconfig")["pyright"].setup({
+      vim.lsp.config("pyright", {
         capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
         on_attach = function(client, buff)
           vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
           vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
         end
       })
+      vim.lsp.enable("pyright")
 
-      -- setup servers
-      -- require("lspconfig")["java_language_server"].setup({
-      --   cmd = { "/Users/jamiewoolgar/dev/tools/java-language-server/dist/lang_server_mac.sh" },
-      --   capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
-      --   on_attach = function(client, buff)
-      --     vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
-      --     vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
-      --   end
-      -- })
-      -- for k, server in pairs(opts.servers) do
-      --   require("lspconfig")[server].setup({
-      --     capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
-      --     -- cmd = { "vscode-eslint-language-server", "--stdio" },
-      --     on_attach = function(client, buff)
-      --       vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
-      --       vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
-      --       if server == "eslint" then
-      --         -- client.resolved_capabilities.document_formatting = true
-      --         client.server_capabilities.documentFormattingProvider = true
-      --         vim.api.nvim_create_autocmd("BufWritePre", {
-      --           buffer = bufnr,
-      --           command = "EslintFixAll"
-      --         })
-      --       end
-      --     end
-      --   })
-      -- end
+      -- gopls
+      vim.lsp.config("gopls", {
+        capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+        on_attach = function(client, buff)
+          vim.api.nvim_buf_set_keymap(buff or 0, "n", "K", ":lua vim.lsp.buf.hover()<CR>", { silent = true })
+          vim.api.nvim_buf_set_keymap(buff or 0, "n", "<Leader>a", ":lua vim.diagnostic.open_float()<CR>", { silent = true })
+        end
+      })
+      vim.lsp.enable("gopls")
     end
   }
 }, lazyopts)
