@@ -42,6 +42,7 @@ alias notes="cd ~/Library/Mobile\\ Documents/iCloud\~md\~obsidian/Documents/Obsi
 alias python="python3"
 alias pip="python3 -m pip"
 
+alias assume="source assume"
 
 # Checkout or create new branch
 gch() {

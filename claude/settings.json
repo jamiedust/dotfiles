@@ -3,6 +3,10 @@
     "ENABLE_LSP_TOOL": "1",
     "CLAUDE_AFK_TIMEOUT_MS": "86400000"
   },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/dotfiles/claude/statusline.sh"
+  },
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true
   },
@@ -10,7 +14,9 @@
     "enabled": true,
     "allowUnsandboxedCommands": false
   },
+  "awaySummaryEnabled": false,
   "autoUpdatesChannel": "stable",
+  "tui": "fullscreen",
   "theme": "dark-ansi",
-  "awaySummaryEnabled": false
+  "skipWorkflowUsageWarning": true
 }
