@@ -8,6 +8,7 @@ return {
         formatters_by_ft = {
           lua = { 'stylua' },
           go = { 'gofmt' },
+          sql = { 'sql_formatter' },
           javascript = webfmt,
           javascriptreact = webfmt,
           typescript = webfmt,
@@ -15,6 +16,11 @@ return {
           yaml = webfmt,
           css = webfmt,
           html = webfmt
+        },
+        formatters = {
+          sql_formatter = {
+            prepend_args = { '--language', 'postgresql' }
+          }
         },
         format_on_save = {
           timeout_ms = 500,

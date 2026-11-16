@@ -2,10 +2,6 @@ return {
   -- TODO: look at replacing a lot of this with a unified set of plugins based on Snacks.nvim
   -- https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
   -- https://github.com/folke/snacks.nvim/blob/main/docs/explorer.md
-  -- plus...
-  -- https://github.com/folke/snacks.nvim/blob/main/docs/dim.md
-  -- https://github.com/folke/snacks.nvim/blob/main/docs/image.md
-  -- https://github.com/folke/snacks.nvim/blob/main/docs/words.md
   {
     "nvim-telescope/telescope.nvim", branch = "master",
     lazy = false,
