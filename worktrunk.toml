@@ -1,0 +1,5 @@
+[pre-start]
+deps = "ln -sf {{ primary_worktree_path }}/node_modules ."
+
+[post-start]
+copy = "wt step copy-ignored --require-include"
