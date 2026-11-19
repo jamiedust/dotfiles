@@ -102,10 +102,7 @@ require('vim._core.ui2').enable({
 })
 
 -- key maps
-local map = vim.api.nvim_set_keymap
 -- TODO: look into https://github.com/folke/snacks.nvim/blob/main/docs/keymap.md
-
-map('n', '<Leader>n', ':Telescope find_files search_dirs={"~/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents/Obsidian"}<Return>', { desc = 'Open a file in notes directory' })
 
 --
 -- Init Lazy.nvim package manager
